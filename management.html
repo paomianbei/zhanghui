@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>main</title>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="lib/element-ui/css/index.css">
+    <script src="lib/vue.js"></script>
+    <script src="lib/element-ui/js/index.js"></script>
+    <script src="lib/vue-resource.min.js"></script>
+    <style>
+        html {
+            width: 100%;
+            height: 100%;
+        }
+        body {
+            width: 100%;
+            height: 100%;
+        }
+       /*条件搜索框start*/
+       /*修改input框默认样式*/
+        .el-input {
+            position: relative;
+            font-size: 14px;
+            display: inline-block;
+             width: 200px;
+        }
+       /*人群列表*/
+       .crowd-list {
+           text-align:center;
+       }
+       .crowd-list li .grid-content {
+           min-width: 6px;
+           overflow: hidden; /*自动隐藏文字*/
+           text-overflow: ellipsis;/*文字隐藏后添加省略号*/
+           white-space: nowrap;/*强制不换行*/
+
+       }
+       /*分页样式*/
+       .pagination{
+           position:absolute;
+           bottom:70px;
+       }
+       /*条件搜索框end*/
+    </style>
+</head>
+<body>
+<div id="app" v-cloak style="position:relative;height:100%;min-height: 300px;">
+   <!--条件搜索框-->
+    <div class="search-box">
+        <template>
+            <el-select v-model="channelSelect" class="channelSelect">
+                <el-option
+                        v-for="item in channelOpt"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                        :disabled="item.disabled">
+                </el-option>
+            </el-select>
+        </template>
+        <template>
+            <el-select v-model="statusSelect" class="statusSelect">
+                <el-option
+                        v-for="item in statusOpt"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                        >
+                </el-option>
+            </el-select>
+        </template>
+        <el-input v-model="crowd" placeholder="请输入人群名称" class="crowd"></el-input>
+        <el-button type="primary" class="search-btn">搜索</el-button>
+        <el-button type="primary" class="action-btn"><i class="el-icon-document"></i>按行为创建标签</el-button>
+        <el-button type="primary" class="event-btn">按事件创建标签</el-button>
+    </div>
+        <div class="crowd-list">
+            <ul>
+                <li>
+                    <el-col :span="3"><div class="grid-content">人群名称</div></el-col>
+                    <el-col :span="3"><div class="grid-content">人群类型</div></el-col>
+                    <el-col :span="4"><div class="grid-content">有效日期</div></el-col>
+                    <el-col :span="2"><div class="grid-content">同步渠道</div></el-col>
+                    <el-col :span="2"><div class="grid-content">推送系统</div></el-col>
+                    <el-col :span="2"><div class="grid-content">覆盖人数</div></el-col>
+                    <el-col :span="2"><div class="grid-content">状态</div>   </el-col>
+                    <el-col :span="4"><div class="grid-content">创建人</div></el-col>
+                    <el-col :span="2"><div class="grid-content">操作</div>  </el-col>
+                </li>
+                <li v-for="(item,index) in crowdData">
+                    <el-row>
+                        <el-col :span="3">
+                            <el-tooltip class="item" effect="dark" :content="item.name" placement="top">
+                                <div class="grid-content">{{item.name}}</div>
+                            </el-tooltip>
+                        </el-col>
+                        <el-col :span="3"><div class="grid-content">按行为标签</div></el-col>
+                        <el-col :span="4"><div class="grid-content">2017/04/12-2020/04/12</div></el-col>
+                        <el-col :span="2"><div class="grid-content">app-pus</div></el-col>
+                        <el-col :span="2"><div class="grid-content">ios</div></el-col>
+                        <el-col :span="2"><div class="grid-content">500000</div></el-col>
+                        <el-col :span="2">
+                            <template>
+                                <div v-if="item.gq=='true'">
+                                    124
+                                </div>
+                                <div v-else>
+                                    <el-switch
+                                            v-model="item.status"
+                                            on-text=""
+                                            off-text=""
+                                            on-color="#13ce66"
+                                            off-color="#ff4949">
+                                    </el-switch>
+                                </div>
+                            </template>
+                        </el-col>
+                        <el-col :span="4"><div class="grid-content">13412345678</div></el-col>
+                        <el-col :span="2">
+                            <template >
+                                <a v-show="!item.status" @click="del(index)">编辑</a>
+                                <a>查看</a>
+                            </template>
+                        </el-col>
+                    </el-row>
+                </li>
+            </ul>
+        </div>
+        <div class="block pagination" >
+            <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page.sync="currentPage3"
+                    :page-size="2"
+                    layout="prev, pager, next, jumper"
+                    :total="table.length">
+            </el-pagination>
+        </div>
+
+</div>
+
+
+<script>
+    new Vue({
+        data: {
+            channelSelect: '全部同步渠道',
+            statusSelect:'全部状态',
+            crowd:'',
+            crowdData: [],
+            table:[],
+            currentPage3:1,
+            channelOpt: [
+                {
+                value: '短信',
+                label: '短信',
+                disabled: true
+            }, {
+                value: '邮件',
+                label: '邮件',
+                disabled: true
+            }, {
+                value: 'app-push',
+                label: 'app-push'
+            }, {
+                value: 'pc-dsp',
+                label: 'pc-dsp',
+                disabled: true
+            }, {
+                value: '移动dsp',
+                label: '移动dsp',
+                disabled: true
+            },{
+                value: '全部同步渠道',
+                label: '全部同步渠道'
+            }
+            ],
+            statusOpt:[
+                {
+                    value: '全部状态',
+                    label: '全部状态'
+                },
+                {
+                    value: '未开启',
+                    label: '未开启'
+                },
+                {
+                    value: '开启',
+                    label: '开启'
+                },
+                {
+                    value: '过期',
+                    label: '过期'
+                }
+            ]
+
+        },
+        mounted: function () {
+            var _this=this;
+            this.$nextTick(function(){
+                this.$http({
+                    url:'data.json',
+                }).then(function(data){
+                    data.body.forEach(function(val,index){
+                        _this.table.push(val);
+                    });
+                    console.log(data.body.length);
+                    for(var i=(this.currentPage3-1)*2;i<2;i++){
+                        if(_this.table[i]!=undefined){
+                            _this.crowdData.push( _this.table[i]);
+                        }
+                    }
+                },function(error){
+
+                })
+            })
+        },
+        methods: {
+            del:function (el){
+                this.tableData.splice(el,1);
+            },
+            handleSizeChange:function(val) {
+                console.log(`每页 ${val} 条`);
+            },
+            handleCurrentChange:function(val) {
+                console.log('当前页:' +val);
+                this.currentPage3=val;
+                console.log(typeof val);
+                this.crowdData.length=0;
+                for(var i=(val-1)*2;i<2*val;i++){
+                    console.log(this.table[i]);
+                    if(this.table[i]!=undefined){
+                        this.crowdData.push(this.table[i]);
+                    }
+
+
+                }
+
+            }
+        }
+
+    }).$mount('#app')
+</script>
+</body>
+</html>

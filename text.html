@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/normalize.css">
+    <script src="lib/vue.js"></script>
+    <script src="lib/vue-router.js"></script>
+    <style>
+        [v-cloak]{
+            display:none;
+        }
+    </style>
+</head>
+<body>
+<div id="app" v-cloak>
+    <form action="">
+        <input type="button" class="btn" value="添加" @click="add">
+        <div class="wrap">
+            <div class="list" v-if="shuju.length>0" >
+                <ul v-for="(item,index) in shuju">
+                    {{index}}
+                    <li><span>近</span> <input type="text" style="width:20px;height:20px; border:1px solid #000;"  v-model="item.name"> <span>天</span></li>
+                    <li><input type="text" placeholder="选择行为"></li>
+                    <input type="button" value="删除" @click="del(index)">
+                </ul>
+
+            </div>
+            <div class="tip" v-else>
+                <p>暂无条件</p>
+            </div>
+        </div>
+        <input type="radio" name="sex" value="男"> 男
+        <input type="radio" name="sex"> 女
+        <input type="submit" value="提交">
+    </form>
+</div>
+
+
+<script>
+
+    var app = new Vue({
+         data:{
+             shuju:[
+//                 {
+//                     name:'zhangsan',
+//                     age:18
+//                 },
+//                 {
+//                     name:'lisi',
+//                     age:20
+//                 }
+             ]
+         },
+        methods:{
+            add:function(){
+                this.shuju.push({name:''})
+            },
+            del:function (el){
+                this.shuju.splice(el,1);
+            }
+        }
+    }).$mount('#app')
+
+</script>
+</body>
+</html>

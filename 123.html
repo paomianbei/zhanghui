@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="lib/element-ui/css/index.css">
+    <link rel="stylesheet" href="css/">
+    <script src="lib/vue.js"></script>
+    <script src="lib/element-ui/js/index.js"></script>
+    <!--<script src="lib/element-ui/js/pagination.js"></script>-->
+    <script src="lib/vue-resource.min.js"></script>
+    <style>
+        .table li {
+            /*width:100%;*/
+            /*min-width:980px;*/
+        }
+        .el-row {
+            margin-bottom: 20px;
+        /*&:last-child {*/
+             /*margin-bottom: 0;*/
+         /*}*/
+        }
+        .el-row:last-child {
+            margin-bottom: 0;
+        }
+        .el-col {
+            border-radius: 4px;
+            white-space:nowrap;
+            overflow:hidden;
+            text-overflow:ellipsis;
+        }
+        .grid-content {
+            /*min-width:100px;*/
+            white-space:nowrap;
+            overflow:hidden;
+            text-overflow:ellipsis;
+        }
+        .bg-purple-dark {
+            background: #99a9bf;
+        }
+        .bg-purple {
+            background: #d3dce6;
+        }
+        .bg-purple-light {
+            background: #e5e9f2;
+        }
+        .grid-content {
+            border-radius: 4px;
+            min-height: 36px;
+        }
+        .row-bg {
+            padding: 10px 0;
+            background-color: #f9fafc;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="table">
+        <ul>
+            <li v-for="(item,index) in tableData">
+                <el-row :gutter="20">
+                    <el-col :span="3">
+                        <el-tooltip class="item" effect="dark" :content="item.name" placement="top">
+                            <div class="grid-content">{{item.name}}</div>
+                        </el-tooltip>
+                    </el-col>
+                    <el-col :span="3"><div class="grid-content">按行为标签</div></el-col>
+                    <el-col :span="4"><div class="grid-content">2017/04/12-2020/04/12</div></el-col>
+                    <el-col :span="2"><div class="grid-content">app-pus</div></el-col>
+                    <el-col :span="2"><div class="grid-content">ios</div></el-col>
+                    <el-col :span="2"><div class="grid-content">500000</div></el-col>
+                    <el-col :span="2">
+                        <template>
+                            <div v-if="item.gq=='true'">
+                                124
+                            </div>
+                            <div v-else>
+                                <el-switch
+                                        v-model="item.status"
+                                        on-text=""
+                                        off-text=""
+                                        on-color="#13ce66"
+                                        off-color="#ff4949">
+                                </el-switch>
+                            </div>
+                        </template>
+                    </el-col>
+                    <el-col :span="3"><div class="grid-content">13412345678</div></el-col>
+                    <el-col :span="3">
+                        <template >
+                            <el-button v-show="!item.status" @click="del(index)">编辑</el-button>
+                            <el-button>查看</el-button>
+                        </template>
+                    </el-col>
+                </el-row>
+            </li>
+        </ul>
+    </div>
+    <div class="block">
+        <span class="demonstration">直接前往</span>
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page.sync="currentPage3"
+                :page-size="2"
+                layout="prev, pager, next, jumper"
+                :total="table.length">
+
+        </el-pagination>
+    </div>
+    <template>
+        <div class="block">
+            <span class="demonstration">默认</span>
+            <el-date-picker
+                    @change="change"
+                    v-model="value6"
+                    type="daterange"
+                    format="yyyy-MM-dd"
+                    placeholder="选择日期范围">
+            </el-date-picker>
+            <span>{{value6}}</span>
+        </div>
+    </template>
+    <div>
+        <!--<select v-model="A">-->
+            <!--<option v-for="yx in YX">-->
+                <!--{{yx.text}}-->
+            <!--</option>-->
+        <!--</select>-->
+        <!--<select name="ZY">-->
+            <!--<option v-for="zy in  selection">-->
+                <!--{{zy.text}}-->
+            <!--</option>-->
+        <!--</select>-->
+        <div style="width:300px;height:100px;border:1px solid #000;">
+            <li v-for="yx in  YX " @click="select(yx.text)">
+                {{yx.text }}
+            </li>
+        </div>
+        <div style="width:300px;height:100px;border:1px solid #000;">
+            <li v-for="zy in area" @click="check(zy)">
+                {{zy}}
+            </li>
+        </div>
+        <div>
+            <span v-for="(v,index) in B" @dblclick="del(index)">
+                {{v}}
+            </span>
+        </div>
+    </div>
+
+    <input type="text" v-model="sousuo" style="border:1px solid #000;">
+    <div>
+        <li v-for="yx in  searchData " @click="select(yx.text)">
+            {{yx}}
+        </li>
+    </div>
+    <div>
+        <li v-for="yz in areaData">
+            {{yz}}
+        </li>
+    </div>
+</div>
+
+<script>
+    new Vue({
+        data :{
+            currentPage3:1,
+            table:[],
+            tableData: [],
+            value6: '',
+            A:'',
+            B:[],
+            show:false,
+            sousuo:'计信院',
+            privice:[
+                {
+                    text:'计信院'
+               },
+
+                {
+                    text:'商学院'
+                },
+                {
+                    text:'社会科学'
+                },
+                {
+                    text:'社会'
+                },
+                {
+                    text:'科学'
+                },
+                {
+                    text:'科学1234'
+                },
+            ],
+            area:[],
+            YX:[
+                {
+                    text:'计信院',
+                    ZY:[
+                        {text:'软件工程'},
+                        {text:'计算机科学与技术'},
+                        {text:"信息安全"},
+                    ]
+                },
+                {
+                    text:'商学院',
+                    ZY:[
+                        {text:'旅游管理'},
+                        {text:'工商管理'},
+                        {text:"行政管理"},
+                    ]
+                },
+                {
+                    text:'社会科学',
+                    ZY:[]
+                }
+            ]
+
+        },
+        computed:{
+            selection: function() {
+                for (var i = 0; i < this.YX.length; i++) {
+                    if (this.YX[i].text === this.A) {
+                        return this.YX[i].ZY;
+                    }
+                }
+            },
+            searchData : function() {
+                var search = this.sousuo;
+                var arr=[];
+                if (search) {
+                    for(var i =0;i<this.privice.length;i++){
+                        if(this.privice[i].text.indexOf(search)>-1){
+                          arr.push(this.privice[i].text)
+                        }
+                    }
+                }
+//                else {
+//                    this.privice.forEach(function(val,index){
+//                        arr.push(val.text);
+//                    })
+//                }
+                return arr;
+            },
+            areaData:function(){
+                var search = this.sousuo;
+                var arr=[];
+                if (search) {
+                    for(var i =0;i<this.YX.length;i++){
+                        for(var j=0;j<this.YX[i].ZY.length;j++){
+                            if(this.YX[i].ZY[j].text.indexOf(search)>-1){
+                                arr.push(this.YX[i].ZY[j].text);
+                            }
+                        }
+                    }
+                }else {
+//                    this.privice.forEach(function(val,index){
+//                        arr.push(val.text);
+//                    })
+                }
+                return arr;
+
+
+            }
+
+        },
+        mounted:function(){
+
+            var _this=this;
+                        this.$nextTick(function(){
+                this.$http({
+                    url:'data.json',
+                }).then(function(data){
+                    data.body.forEach(function(val,index){
+                       _this.table.push(val);
+                    });
+                    console.log(data.body.length);
+                    for(var i=(this.currentPage3-1)*2;i<2;i++){
+                        if(_this.table[i]!=undefined){
+                            _this.tableData.push( _this.table[i]);
+                        }
+                    }
+                },function(error){
+
+                })
+            })
+        },
+        methods: {
+            select:function(val){
+                for(var i=0;i<this.YX.length;i++){
+                    if(val==this.YX[i].text){
+                        this.area.length=0;
+                        console.log(this.YX[i]);
+                        for(var j=0;j<this.YX[i].ZY.length;j++){
+                            this.area.push(this.YX[i].ZY[j].text);
+                            console.log(this.YX[i].ZY[j].text);
+                        }
+
+                    }
+                }
+
+
+            },
+            check:function(val){
+                if(this.B.indexOf(val.text)==-1){
+                    this.B.push(val.text)
+                }
+            },
+            del:function(index){
+                this.B.splice(index,1);
+            },
+            search:function(){
+                var _this=this;
+                this.privice.forEach(function(val,index){
+                   if(val.text.indexOf(_this.sousuo)>-1){
+                       console.log(123);
+                       console.log(_this.sousuo);
+                       console.log(_this.privice.splice(index, 1));
+                   }
+                })
+            },
+            handleSizeChange:function(val) {
+               // console.log(`每页 ${val} 条`);
+            },
+            handleCurrentChange:function(val) {
+                console.log('当前页:' +val);
+                this.currentPage3=val;
+                console.log(typeof val);
+                this.tableData.length=0;
+                for(var i=(val-1)*2;i<2*val;i++){
+                    console.log(this.table[i]);
+                    if(this.table[i]!=undefined){
+                        this.tableData.push(this.table[i]);
+                    }
+
+                    console.log(123);
+                    console.log(this.tableData);
+
+                }
+
+            },
+            change:function(){
+                var start=new Date(this.value6[0]);
+                    start=start.toLocaleDateString();
+                var end=new Date(this.value6[1]);
+                    end=end.toLocaleDateString();
+                value=start+end;
+                var arr=[];
+                arr.push(start,end);
+                console.log(arr);
+
+            }
+        }
+    }).$mount('#app')
+</script>
+</body>
+</html>

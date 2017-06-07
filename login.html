@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/login.css">
+    <script src="lib/vue.js"></script>
+    <script src="lib/jquery.min.js"></script>
+    <script src="lib/jquery.cookie.js"></script>
+    <script src="lib/vue-resource.min.js"></script>
+    <style>
+        #login {
+            width: 200px;
+            margin:auto;
+        }
+        .remberme {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border:1px solid #000;
+            position:relative;
+        }
+        .icon {
+            font-size:12px;
+            width: 10px;
+            height: 10px;
+            position:absolute;
+            top: 0;
+            left: 0;
+        }
+        input {
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+  <div class="bg" id="login">
+      <form  id="loginForm">
+          <div>
+              <input type="text" name="username"  v-model="username" @focus="username=''" placeholder="用户名">
+              {{username}}
+          </div>
+          <div>
+              <input type="password" name="password" v-model="password" @focus="password=''">
+          </div>
+          <div id="error_tip">
+              <p>{{errmsg}}</p>
+          </div>
+          <div>
+             <span class="remberme" @click="remberme=!remberme"><i v-show="remberme"  class="icon"> √</i></span> <span>记住用户名密码</span>
+          </div>
+          <div>
+              <input type="button" value="登录" @click="login()">
+          </div>
+      </form>
+  </div>
+
+
+  <script>
+
+      var vm=new Vue({
+          el:'#login',
+          data:{
+              username:'',
+              password:'',
+              remberme:false,
+              errmsg:'',
+          },
+          mounted: function () {
+              var _this=this;
+              this.$nextTick(function(){
+                  _this.username=_this.getCookie('username');
+                  _this.password=_this.getCookie('password');
+                  _this.remberme=_this.getCookie('remberme');
+                  window.addEventListener('keyup',function(e){
+                      if(e.keyCode==13){
+                          _this.login();
+                      }
+                  })
+              })
+
+          },
+          methods:{
+                login:function(){
+                    var _this=this;
+                    if(this.username==''){
+                        this.errmsg='请输入用户名';
+                        return false;
+                    }
+                    if(this.password==''){
+                        this.errmsg='请输入密码';
+                        return false;
+                    }
+//                    $.ajax({
+//                        type: "get",
+//                        data: "username="+this.username+"&password="+this.password,
+//                        url: "http://localhost:8084/Portrait_PC/sys/login",
+//                        beforeSend: function () {
+//                        },
+//                        success: function (data) {
+//                            console.log(JSON.parse(data));
+//                            if(JSON.parse(data).success==true){
+//                                if(_this.remberme==true){
+//                                    //设置cookie
+//                                    var Days = 7; //cookie 将被保存7天
+//                                    var exp = new Date(); //获得当前时间
+//                                    username = escape(this.username);
+//                                    exp.setTime(exp.getTime() + Days*24*60*60*1000); //换成毫秒
+//                                    document.cookie="username="+_this.username+";expires="+exp.toGMTString();
+//                                    document.cookie="password="+_this.password+";expires="+exp.toGMTString();
+//                                    document.cookie="remberme="+_this.remberme+";expires="+exp.toGMTString();
+//                                }else {
+//                                    var date=new Date();
+//                                    date.setTime(date.getTime()-10000);
+//                                    document.cookie="username="+_this.username+";expires="+date.toGMTString();
+//                                    document.cookie="password="+_this.password+";expires="+date.toGMTString();
+//                                    document.cookie="remberme="+_this.remberme+";expires="+date.toGMTString();
+//                                }
+//
+//                            }else {
+//                                _this.errmsg='用户名或密码错误';
+//                              }
+//                            }
+//
+//                    });
+                    this.$http.get("http://localhost:8084/Portrait_PC/sys/login",{
+                        params: {
+                            'username':_this.username,
+                            'password':_this.password
+                        }
+
+                    }).then(function(data){
+                        console.log(data.body.success);
+                        if(data.body.success==true){
+                            if(_this.remberme==true){
+                                //设置cookie
+                                var Days = 7; //cookie 将被保存7天
+                                var exp = new Date(); //获得当前时间
+                                username = escape(this.username);
+                                exp.setTime(exp.getTime() + Days*24*60*60*1000); //换成毫秒
+                                document.cookie="username="+_this.username+";expires="+exp.toGMTString();
+                                document.cookie="password="+_this.password+";expires="+exp.toGMTString();
+                                document.cookie="remberme="+_this.remberme+";expires="+exp.toGMTString();
+                            }else {
+                                var date=new Date();
+                                date.setTime(date.getTime()-10000);
+                                document.cookie="username="+_this.username+";expires="+date.toGMTString();
+                                document.cookie="password="+_this.password+";expires="+date.toGMTString();
+                                document.cookie="remberme="+_this.remberme+";expires="+date.toGMTString();
+                            }
+
+                        }else {
+                            _this.errmsg='用户名或密码错误';
+                        }
+
+                    },function(error){
+
+                    })
+
+                },
+              getCookie:function(name){
+                  if (document.cookie.length>0){
+                      c_start=document.cookie.indexOf(name + "=");
+                   if (c_start!=-1){
+                       c_start=c_start + name.length+1 ;
+                       c_end=document.cookie.indexOf(";",c_start);
+                       if (c_end==-1) c_end=document.cookie.length;
+                       return unescape(document.cookie.substring(c_start,c_end));
+                           }
+                       }
+                       return "";
+                  }
+          }
+      })
+
+  </script>
+</body>
+</html>

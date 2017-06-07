@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>main</title>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="lib/element-ui/css/index.css">
+    <script src="lib/vue.js"></script>
+    <script src="lib/element-ui/js/index.js"></script>
+    <script src="lib/vue-resource.min.js"></script>
+    <script src="lib/jquery.min.js"></script>
+    <style >
+        body {
+            overflow: hidden;
+        }
+        [v-cloak] {
+            display: none;
+        }
+
+        /*头部导航start*/
+        .nav {
+            width: 100%;
+            height: 70px;
+            line-height: 70px;
+            background-color: #1e2a30;
+            border-bottom: 1px solid #060606;
+            position: relative;
+            top: 0;
+            left: 0;
+        }
+
+        .nav .el-row {
+            width:calc(100% - 219px);
+            /*min-width: 981px;*/
+            height: 70px;
+            color: #b0b0b0;
+            background-color: #1a2229;
+            position:absolute;
+            left: 219px;
+            transition: all .2s linear;
+        }
+        .nav .el-row.show {
+            width:calc(100% - 100px);
+            left:100px;
+        }
+        .nav .el-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .nav .el-col {
+            float: left;
+
+        }
+
+        .nav .row-bg {
+            background-color: #1e2a30;
+        }
+
+        .nav .title {
+            width: 218px;
+            height:70px;
+            border-right: 1px solid #060606;
+            color: #fff;
+            text-align: center;
+            font-size: 30px;
+            position:absolute;
+            left: 0;
+            transition: all .2s linear;
+        }
+        .nav .title.show {
+            width:100px;
+        }
+        .nav .more {
+            width: 90px;
+            min-width: 90px;
+            padding: 0 35px;
+            border-right: 1px solid #060606;
+            cursor:pointer;
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -ms-box-sizing: border-box;
+            -o-box-sizing: border-box;
+        }
+
+        /*.nav .el-col:first-of-type {*/
+            /*min-width: 219px;*/
+            /*color: #fff;*/
+            /*text-align: center;*/
+            /*font-size: 30px;*/
+        /*}*/
+
+        .nav .el-col:nth-of-type(3) {
+            /*min-width: 660px;*/
+        }
+
+        .nav .el-col:last-child {
+            font-size: 14px;
+            padding-right: 23px;
+            position: absolute;
+            right: 0;
+        }
+
+        .nav .nav-menu a {
+            display: inline-block;
+            font-size: 18px;
+            /*height:70px;*/
+            /*color:#b0b0b0;*/
+            /*padding:0 24px;*/
+            /*border-left:1px solid #495157;*/
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -ms-box-sizing: border-box;
+            -o-box-sizing: border-box;
+        }
+
+        /*.nav .nav-menu a:last-of-type {*/
+        /*border-right:1px solid #495157;*/
+        /*}*/
+        /*.nav .nav-menu a.active {*/
+        /*color:#00acac;*/
+        /*border-bottom: 3px solid #00acac;*/
+        /*}*/
+        /*改写tab栏切换菜单样式*/
+        .nav .el-menu-item, .el-submenu__title {
+            padding: 0 24px;
+            border-right: 1px solid #495157;
+        }
+
+        .nav  .el-menu-item:first-of-type, .el-submenu__title {
+            border-left: 1px solid #495157;
+        }
+
+        .nav .el-menu--dark .el-menu-item, .el-menu--dark .el-submenu__title {
+            color: #b0b0b0;
+        }
+
+        .nav .el-menu--dark .el-menu-item:nth-of-type(3) {
+            color: #00acac;
+            border-bottom: 3px solid #00acac;
+        }
+
+        .nav .el-menu--horizontal.el-menu--dark .el-submenu .el-menu-item.is-active, .el-menu-item.is-active {
+            color: #00acac;
+            border-bottom: 3px solid #00acac;
+        }
+
+        .nav .el-menu--horizontal.el-menu--dark .el-menu-item:hover {
+            background-color: transparent;
+            border-bottom: 3px solid #00acac;
+        }
+
+        .nav .el-menu--horizontal.el-menu--dark .el-menu-item:hover a {
+            color: #00acac;
+        }
+
+        .nav .nav-menu .el-menu--dark {
+            background-color: transparent;
+        }
+
+        .nav .nav-menu .el-menu {
+            background-color: transparent;
+        }
+
+        .nav .nav-menu .el-menu--horizontal .el-menu-item {
+            height: 70px;
+            line-height: 70px;
+        }
+
+        .nav .not-open {
+            color: #b0b0b0 !important;
+            border-bottom-color: transparent !important;
+        }
+        /*改写提示框样式*/
+        .el-popover {
+            background: #060606;
+            color:#b0b0b0;
+            text-align: center;
+            border: none;
+            padding: 10px;
+            z-index: 2000;
+            font-size: 16px;
+        }
+        .el-popover[x-placement^=bottom] .popper__arrow {
+            top: -6px;
+            left: 50%;
+            margin-right: 3px;
+            border-top-width: 0;
+            border-bottom-color: #060606;
+        }
+        .el-popover[x-placement^=bottom] .popper__arrow::after {
+            top: 1px;
+            margin-left: -6px;
+            border-top-width: 0;
+            border-bottom-color: #060606;
+        }
+        .el-popover[x-placement^=top] .popper__arrow {
+            bottom: -6px;
+            left: 50%;
+            margin-right: 3px;
+            border-top-color: #060606;
+            /* border-bottom-width: 0; */
+        }
+        .el-popover[x-placement^=top] .popper__arrow::after {
+            bottom: 1px;
+            margin-left: -6px;
+            border-top-color: #060606;
+            border-bottom-width: 0;
+        }
+        /*头部导航end*/
+        /*侧边栏start*/
+        .sidebar {
+            position: absolute;
+            width: 219px;
+            min-width: 219px;
+            height: 100%;
+            overflow-y: auto;
+            background-color: #2d353c;
+            left: 0;
+        }
+
+        /*个人信息*/
+
+        .sidebar .persional-info {
+            font-size: 12px;
+            border-right:1px solid #060606;
+            padding:30px 0;
+            text-align: center;
+            color:#00acac;
+        }
+        .sidebar .persional-info h3 {
+            font-size:18px;
+            line-height: 50px;
+        }
+        .sidebar .persional-info .img-wrap {
+            margin:auto;
+            width:80px;
+            height:80px;
+            border-radius:80px;
+            position:relative;
+            overflow: hidden;
+        }
+        .sidebar .persional-info .img-wrap img {
+            width: 100%;
+            border-radius: 80px;
+        }
+        .sidebar .persional-info p span:last-of-type {
+            margin-left: 15px;
+        }
+
+
+        /*侧边栏菜单样式改写*/
+        .sidebar .el-menu .el-submenu {
+           border-bottom:1px solid #353d44;
+        }
+        .sidebar .el-menu-item-group__title {
+             padding-top: 0px;
+            line-height: normal;
+            font-size: 14px;
+            padding-left: 20px;
+            color: #97a8be;
+        }
+        .el-menu-item, .el-submenu__title {
+            color:#a8acb1
+        }
+        .el-submenu .el-menu-item:hover, .el-submenu__title:hover {
+            background-color: transparent;
+            border-bottom-color:transparent;
+        }
+
+        .sidebar .persional-info .el-submenu .el-menu-item:hover,  .el-submenu__title:hover {
+            background-color: #00acac;
+            color: #fff
+        }
+        .sidebar .el-menu--horizontal.el-menu--dark .el-submenu .el-menu-item.is-active, .el-menu-item.is-active {
+            color: #fff;
+            border-bottom: 3px solid transparent;
+        }
+        .sidebar .el-submenu .el-menu-item {
+            /*height: 36px;*/
+            /*line-height: 36px;*/
+            padding: 0 45px;
+            border-bottom:1px solid #232b32;
+            background-color: #1a2229;
+        }
+        .sidebar .el-menu-item .circle {
+            display:inline-block;
+            width: 10px;
+            height:10px;
+            border-radius: 10px;
+            border:1px solid #a8acb1;
+            margin-right: 10px;
+        }
+        .sidebar .el-menu--horizontal.el-menu--dark .el-submenu .el-menu-item.is-active, .el-menu-item.is-active .circle{
+            border-color:  #00acac;
+        }
+        .sidebar .el-menu  {
+            background-color: transparent;
+        }
+
+        /*侧边栏end*/
+        .main {
+            position: absolute;
+            left: 219px;
+            width: calc(100% - 219px);
+            padding:10px;
+            /*min-width: 981px;*/
+            height: 100%;
+            background-color: pink;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+<div id="app" v-cloak>
+    <!--头部导航start-->
+    <div class="nav">
+        <div class="title" :class="{show}" id="title">
+            {{title}}
+        </div>
+        <el-row class="row-bg" :class="{show}" id="tabMenu">
+                <!--<el-col :lg="3" :sm="3" :xs="3">-->
+                <!--<div class="grid-content title">智能画像系统</div>-->
+                <!--</el-col>-->
+                <el-col :lg="4" :sm="4" :xs="4">
+                    <div class="grid-content more" @click="more"><i class="el-icon-d-arrow-right"></i></div>
+                </el-col>
+                <el-col :lg="18" :sm="18" :xs="16">
+                    <div class="grid-content nav-menu" id="menuList">
+                        <!--<a  href="javascript:void(0);"  >用户洞察</a>-->
+                        <!--<a  href="javascript:void(0);" >商品洞察</a>-->
+                        <!--<a  href="javascript:void(0);" class="active">商户洞察</a>-->
+                        <!--<a  href="javascript:void(0);">智能营销</a>-->
+                        <!--<a  href="javascript:void(0);">微观画像查询</a>-->
+                        <template id="tip">
+                            <el-popover
+                                    ref="popover1"
+                                    placement="bottom"
+                                    width="200"
+                                    trigger="click"
+                                    content="此功能尚未开放!">
+                            </el-popover>
+                            <el-popover
+                                    ref="popover2"
+                                    placement="bottom"
+                                    width="200"
+                                    trigger="click"
+                                    content="此功能尚未开放!">
+                            </el-popover>
+                            <el-popover
+                                    ref="popover3"
+                                    placement="bottom"
+                                    width="200"
+                                    trigger="click"
+                                    content="此功能尚未开放!">
+                            </el-popover>
+                            <el-popover
+                                    ref="popover4"
+                                    placement="bottom"
+                                    width="200"
+                                    trigger="click"
+                                    content="此功能尚未开放!">
+                            </el-popover>
+                        </template>
+                        <el-menu theme="dark" :default-active="activeIndex" class="el-menu-demo" mode="horizontal"
+                                 @select="handleSelect">
+                            <el-menu-item index="1" class="not-open"  v-popover:popover1><a href="javascript:void(0);"><i class="el-icon-document"></i>用户洞察</a></el-menu-item>
+                            <el-menu-item index="2" class="not-open" v-popover:popover2><a href="javascript:void(0);" ><i class="el-icon-document"></i>商品洞察</a></el-menu-item>
+                            <el-menu-item index="3"><a href="javascript:void(0);"><i class="el-icon-document"></i>商户洞察</a></el-menu-item>
+                            <el-menu-item index="4" class="not-open"  v-popover:popover3><a href="javascript:void(0);" ><i class="el-icon-document"></i>智能营销</a></el-menu-item>
+                            <el-menu-item index="5" class="not-open"  v-popover:popover4><a href="javascript:void(0);" ><i class="el-icon-document"></i>微观画像查询</a></el-menu-item>
+                        </el-menu>
+                    </div>
+                </el-col>
+                <el-col :lg="2" :sm="2" :xs="4">
+                    <div class="grid-content " style="text-align: right;">登录</div>
+                </el-col>
+        </el-row>
+
+    </div>
+    <!--头部导航end-->
+    <!--侧边栏start-->
+    <div class="sidebar">
+        <!--个人信息-->
+        <div class="persional-info">
+            <div class="img-wrap" >
+                <img :src="person.imgSrc" >
+            </div>
+            <h3>{{person.department}}</h3>
+            <p><span>{{person.job}}</span> <span>{{person.name}}</span></p>
+        </div>
+        <!--侧边栏菜单-->
+        <div class="sidebar-menu" >
+            <el-menu  class="el-menu-vertical-demo"  :default-openeds="activeIndex2"  default-active="1-1" @open="handleOpen"  id="open">
+                <el-submenu index="1">
+                    <template slot="title"><i class="el-icon-message"></i>人群管理</template>
+                    <template class="group">
+                        <el-menu-item-group >
+                            <el-menu-item index="1-1" ><i class="circle"></i>人群管理</el-menu-item>
+                            <el-menu-item index="1-2" > <i class="circle"></i>按行为标签创建</el-menu-item>
+                            <el-menu-item index="1-3" ><i class="circle"></i>按事件创建</el-menu-item>
+                        </el-menu-item-group>
+                    </template>
+                </el-submenu>
+
+                <el-submenu index="2"   v-popover:popover5>
+                    <el-popover
+                            ref="popover5"
+                            placement="bottom"
+                            width="200"
+                            trigger="click"
+                            content="此功能尚未开放!">
+                    </el-popover>
+                    <template slot="title"><i class="el-icon-message"></i>营销效果监测 </template>
+                </el-submenu>
+            </el-menu>
+        </div>
+    </div>
+    <!--侧边栏end-->
+    <div class="main">
+        <iframe src="management.html" id="myiframe"  frameborder="0" style="width: 100%;height:100%;"></iframe>
+    </div>
+</div>
+
+
+<script>
+    new Vue({
+        data: {
+            title:'智能画像系统',
+            active: false,
+            activeIndex: '3',
+            activeIndex2:['1'],
+            show:false,
+            person:{
+                department:'研究院',
+                job:'工程师',
+                name:'张三',
+                imgSrc:'images/main/persional.png'
+            }
+        },
+        mounted: function () {
+            this.$nextTick(function () {
+                var _this=this;
+                var menu = document.getElementById('menuList');
+                var list = menu.getElementsByTagName('a');
+                console.log(list);
+                for (var i = 0; i < list.length; i++) {
+                    list[i].onclick = function () {
+                        for (var j = 0; j < list.length; j++) {
+                            list[j].className = '';
+                        }
+                        this.className = "active";
+                    }
+
+                }
+                if(document.body.clientWidth<1300){
+                    _this.show=true;
+                    _this.title='画像';
+                }
+                window.onresize=function(){
+
+                    if(document.body.clientWidth<1300){
+                       _this.show=true;
+                        _this.title='画像';
+                    }else {
+                        _this.show=false;
+                        _this.title='智能画像系统';
+                    }
+
+                }
+
+            });
+
+        },
+        computed:{
+
+        },
+        methods: {
+            more:function(){
+                this.show=!this.show;
+                if(this.show==false){
+                    this.title='智能画像系统';
+                }else {
+                    this.title='画像';
+                }
+
+            },
+            handleSelect:function(key, keyPath,e) {
+                console.log(e);
+            },
+            handleOpen:function(key) {
+                var openList=document.getElementById('open');
+                var children=openList.children;
+                //当前菜单选中背景变成蓝色
+                for(var i=0;i<children.length;i++){
+                    children[i].className="el-submenu"
+                }
+                children[key-1].className="el-submenu is-opened";
+                //营销效果监测icon更改
+                if(key==2){
+                    children[key - 1].children[0].children[1].style.transform="rotateZ(0)";
+                    console.log(children[key - 1].children[0].children[1]);
+                }
+            }
+
+        }
+
+    }).$mount('#app')
+</script>
+</body>
+</html>

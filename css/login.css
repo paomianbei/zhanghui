@@ -1,0 +1,21 @@
+#login {
+    width: 200px;
+    margin: auto;
+}
+
+.remberme {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: 1px solid #000;
+    position: relative;
+}
+
+.icon {
+    font-size: 12px;
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}

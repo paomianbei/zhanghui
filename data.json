@@ -1,0 +1,78 @@
+[{
+  "name": "会员生日关怀",
+  "type": "按行为标签",
+  "date": "2017/04/12-2020/04/12",
+  "channel":"app-pus",
+  "system":"ios",
+  "count":"500000",
+  "status":"",
+  "gq":"true",
+  "creater":"13412345678"
+},
+  {
+   "name": "1",
+   "type": "按行为标签",
+   "date": "2017/04/12-2020/04/12",
+   "channel":"app-pus",
+   "system":"ios",
+   "count":"500000",
+   "status":true,
+   "gq":false,
+   "creater":"13412345678"
+  },
+  {
+    "name": "2",
+    "type": "按行为标签",
+    "date": "2017/04/12-2020/04/12",
+    "channel":"app-pus",
+    "system":"ios",
+    "count":"500000",
+    "status":true,
+    "gq":false,
+    "creater":"13412345678"
+  },
+  {
+    "name": "3",
+    "type": "按行为标签",
+    "date": "2017/04/12-2020/04/12",
+    "channel":"app-pus",
+    "system":"ios",
+    "count":"500000",
+    "status":true,
+    "gq":false,
+    "creater":"13412345678"
+  },
+  {
+    "name": "4",
+    "type": "按行为标签",
+    "date": "2017/04/12-2020/04/12",
+    "channel":"app-pus",
+    "system":"ios",
+    "count":"500000",
+    "status":true,
+    "gq":false,
+    "creater":"13412345678"
+  },
+  {
+    "name": "5",
+    "type": "按行为标签",
+    "date": "2017/04/12-2020/04/12",
+    "channel":"app-pus",
+    "system":"ios",
+    "count":"500000",
+    "status":true,
+    "gq":false,
+    "creater":"13412345678"
+  },
+  {
+    "name": "6",
+    "type": "按行为标签",
+    "date": "2017/04/12-2020/04/12",
+    "channel":"app-pus",
+    "system":"ios",
+    "count":"500000",
+    "status":true,
+    "gq":false,
+    "creater":"13412345678"
+  }
+]

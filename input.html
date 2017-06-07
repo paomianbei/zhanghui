@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="./lib/jquery.min.js"></script>
+    <style>
+        /*demo1*/
+        .demo1 label{
+            display: inline-block;
+            cursor: pointer;
+            position: relative;
+            padding-left: 25px;
+            margin-left: 15px;
+            font-size: 13px;
+        }
+        .demo1 input[type='radio'],.demo1 input[type="checkbox"]{
+            display:none;
+        }
+        .demo1 label:before{
+            content: "";
+            display: inline-block;
+
+            width: 17px;
+            height: 16px;
+
+            margin-right: 10px;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            background-color: #3797fc;
+        }
+        .demo1 input[type='radio'] + label:before{
+            border-radius: 8px;
+        }
+        .demo1 input[type='checkbox'] + label:before{
+            border-radius: 3px;
+        }
+
+        .demo1 input[type='radio']:checked+label:before{
+            content: "\2022";
+            color: #fff;
+            font-size: 30px;
+            text-align: center;
+            line-height: 19px;
+        }
+        .demo1 input[type='checkbox']:checked+label:before{
+            content: "\2713";
+            font-size: 15px;
+            color: #f3f3f3;
+            text-align: center;
+            line-height: 17px;
+        }
+        /*demo2*/
+        .demospan{
+            display: inline-block;
+            width: 24px;
+            height: 18px;
+            /*float: left;*/
+            padding-top: 3px;
+            cursor: pointer;
+            text-align: center;
+            margin-right: 10px;
+            background-image: url(http://sandbox.runjs.cn/uploads/rs/161/i5pmsg7s/inputradio.gif);
+            background-repeat: no-repeat;
+            background-position: -24px 0;
+        }
+
+        .demo21{
+            opacity: 0;
+            cursor: pointer;
+            -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+            filter:alpha(opacity=0);
+        }
+        .on{
+            background-position: 0 0;
+        }
+        .piaochecked{
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            margin-left: 10px;
+            text-align: center;
+            background-image:  url(http://sandbox.runjs.cn/uploads/rs/161/i5pmsg7s/checkbox_01.gif);
+            background-repeat: no-repeat;
+            background-position: 0 0;
+        }
+        .on_check{
+            background-position: 0 -21px;
+        }
+        .cbdemo2{
+            opacity: 0;
+            cursor: pointer;
+            -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(opacity=0)";
+            filter:alpha(opacity=0);
+        }
+        /*select*/
+        .select select{
+            /*复写Chrome和Firefox里面的边框*/
+            border:1px solid  green;
+            /*清除默认样式*/
+            appearance:none;
+            -moz-appearance:none;
+            -webkit-appearance:none;
+            /*在选择框的最右侧中间显示小箭头图片*/
+            background: url("http://ourjs.github.io/static/2015/arrow.png") no-repeat scroll right center transparent;
+            /*为下拉小箭头留出一点位置，避免被文字覆盖*/
+            padding-right: 14px;
+        }
+        /*清除ie的默认选择框样式清除，隐藏下拉箭头*/
+        select::-ms-expand { display: none; }
+    </style>
+</head>
+<body>
+<form action="">
+    <div class="demo1">
+        <h1>radio-使用CSS3</h1>
+        <input type="radio" name="demo" id="demo11" checked="checked">123<label for="demo11">这是demo11</label>
+        <input type="radio" name="demo" id="demo12"><label for="demo12">这是demo12</label>
+        <input type="radio" name="demo" id="demo13"><label for="demo13">这是demo12</label>
+        <input type="checkbox" name="check1"  id="check1"><label for="check1">Checkbox No.1</label>
+        <input type="checkbox" name="check1"  id="check2"><label for="check2">Checkbox No.2</label>
+    </div>
+    <div class="demo2">
+        <h1>radio-使用js</h1>
+				<span class="demospan on">
+					<input type="radio" name="demo2" id="demo21" checked="checked" class="demo21">
+				</span><label for="demo21">这是demo21</label>
+				<span class="demospan">
+					<input type="radio" name="demo2" id="demo22"  class="demo21">
+				</span><label for="demo22">这是demo22</label>
+				<span class="demospan">
+					<input type="radio" name="demo2" id="demo23" class="demo21">
+				</span><label for="demo23">这是demo22</label>
+				<span class="piaochecked on_check">
+					<input type="checkbox" name="check2" value="check1" id="check3" class="cbdemo2">
+				</span><label for="check3">Checkbox No.1</label>
+				<span class="piaochecked">
+					<input type="checkbox" name="check2" value="check2" id="check4" class="cbdemo2">
+				</span><label for="check4">Checkbox No.2</label>
+    </div>
+
+    <div class="select">
+        <h1>selected</h1>
+        <select name="demo1">
+            <option value="demo11">demo11</option>
+            <option value="1">demo12</option>
+            <option value="2">demo13</option>
+        </select>
+    </div>
+
+
+    <input type="submit" value="提交">
+</form>
+ <script>
+     $(function(){
+         $(".demospan").bind("click",function(){
+             $(this).addClass("on").siblings().removeClass("on");
+         })
+
+         $(".piaochecked").bind("click",function(){
+             $(this).hasClass("on_check")?$(this).removeClass("on_check"):$(this).addClass("on_check");
+             // $(this).toggleClass("on_check");
+         })
+     })
+ </script>
+</body>
+</html>
